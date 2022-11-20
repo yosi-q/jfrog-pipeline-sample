@@ -1,0 +1,9 @@
+resources:
+  - name: my_Git_Repository
+    type: GitRepo
+    configuration:
+      gitProvider: xraysample_git
+      path: yosi-q/jfrog-pipeline-sample
+      branches:
+        include: main
+ 
