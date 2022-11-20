@@ -9,6 +9,8 @@ resources:
 
 pipelines:
   - name: sample_pipeline
+    configuration:
+      jfrogCliVersion: 2
     steps:
     - name: step_1
       type: Bash
