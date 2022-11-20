@@ -7,6 +7,13 @@ resources:
       branches:
         include: main
 
+  - name: mvn_build_info
+    type: BuildInfo
+    configuration:
+      sourceArtifactory: satoytestingfree
+      buildName: pipeline_build
+      buildNumber: 1   
+
 pipelines:
   - name: sample_pipeline
     configuration:
@@ -21,7 +28,38 @@ pipelines:
         onExecute:
           - echo "Hello World!"
     
-    - name: step_2
+    - name: step_2_build
+      type: MvnBuild
+      configuration:
+        resolverSnapshotRepo: xraysample
+        resolverReleaseRepo: xraysample
+        deployerSnapshotRepo: xraysample
+        deployerReleaseRepo: xraysample
+        integrations:
+          - name: satoytestingfree
+        inputResources:
+          - name: my_Git_Repository     # Trigger execution on code commit
+        inputSteps:
+          - name: step_1               # Execute this step after the prior step
+      execution:
+        onStart:
+          - echo "Preparing for work..."
+        onSuccess:
+          - echo "Job well done!"
+        onFailure:
+          - echo "uh oh, something went wrong"
+        onComplete:                                  #always
+          - echo "Cleaning up some stuff"
+
+    - name: publish_build_info
+      type: PublishBuildInfo
+      configuration:
+        inputSteps: 
+          - name: step_2_build
+        outputResources: 
+          - name: mvn_build_info
+
+    - name: step_3
       type: Bash
       configuration:
         inputSteps:
