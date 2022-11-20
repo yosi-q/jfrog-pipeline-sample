@@ -7,21 +7,24 @@ resources:
       branches:
         include: main
 
-steps:
-- name: step_1
-  type: Bash
-  configuration:
-    inputResources:
-      - name: my_Git_Repository     # Trigger execution on code commit
-  execution:
-    onExecute:
-      - echo "Hello World!"
- 
-- name: step_2
-  type: Bash
-  configuration:
-    inputSteps:
-      - name: step_1               # Execute this step after the prior step
-  execution:
-    onExecute:
-      - echo "Goodbye World!"
+pipelines:
+  - name: sample_pipeline
+    cofiguration:
+      steps:
+      - name: step_1
+        type: Bash
+        configuration:
+          inputResources:
+            - name: my_Git_Repository     # Trigger execution on code commit
+        execution:
+          onExecute:
+            - echo "Hello World!"
+      
+      - name: step_2
+        type: Bash
+        configuration:
+          inputSteps:
+            - name: step_1               # Execute this step after the prior step
+        execution:
+          onExecute:
+            - echo "Goodbye World!"
