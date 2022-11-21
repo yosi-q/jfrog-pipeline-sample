@@ -19,7 +19,7 @@ pipelines:
     configuration:
       jfrogCliVersion: 2
     steps:
-    - name: step_1
+    - name: step_init
       type: Bash
       configuration:
         inputResources:
@@ -28,7 +28,7 @@ pipelines:
         onExecute:
           - echo "Hello World!"
     
-    - name: step_2_build
+    - name: step_build
       type: MvnBuild
       configuration:
         resolverSnapshotRepo: xraysample
@@ -40,7 +40,7 @@ pipelines:
         inputResources:
           - name: my_Git_Repository     # Trigger execution on code commit
         inputSteps:
-          - name: step_1               # Execute this step after the prior step
+          - name: step_init               # Execute this step after the prior step
       execution:
         onStart:
           - echo "Preparing for work..."
@@ -55,15 +55,15 @@ pipelines:
       type: PublishBuildInfo
       configuration:
         inputSteps: 
-          - name: step_2_build
+          - name: step_build
         outputResources: 
           - name: mvn_build_info
 
-    - name: step_3
+    - name: step_final
       type: Bash
       configuration:
         inputSteps:
-          - name: step_1               # Execute this step after the prior step
+          - name: publish_build_info               # Execute this step after the prior step
       execution:
         onExecute:
           - echo "Goodbye World!"
